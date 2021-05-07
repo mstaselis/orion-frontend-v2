@@ -22,7 +22,7 @@ const outDir = path.resolve(__dirname, project.platform.output);
 const srcDir = path.resolve(__dirname, "src");
 const baseUrl = "";
 
-const cssRules = [
+const cssRules = (production) => [
   {
     loader: "css-loader",
     options: {
@@ -33,7 +33,10 @@ const cssRules = [
     loader: "postcss-loader",
     options: {
       postcssOptions: {
-        plugins: ["autoprefixer", "cssnano"],
+        plugins: [
+          ...when(production, require("autoprefixer")()),
+          ...when(production, require("cssnano")()),
+        ],
       },
     },
   },
@@ -236,16 +239,16 @@ module.exports = (
               {
                 loader: MiniCssExtractPlugin.loader,
               },
-              ...cssRules,
+              ...cssRules(production),
             ]
-          : ["style-loader", ...cssRules],
+          : ["style-loader", ...cssRules(production)],
       },
       {
         test: /\.css$/i,
         issuer: [{ test: /\.html$/i }],
         // CSS required in templates cannot be extracted safely
         // because Aurelia would try to require it again in runtime
-        use: cssRules,
+        use: cssRules(production),
       },
       { test: /\.html$/i, loader: "html-loader" },
       { test: /\.ts$/, loader: "ts-loader" },
