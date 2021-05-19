@@ -4,21 +4,8 @@
   <require from="./resources/elements/ui-nav"></require>
   <require from="./resources/elements/ui-drawer"></require>
 
-  <loading-indicator loading.bind="router.isNavigating"></loading-indicator>
-
-  <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
-    <ui-header title.bind="navTitle" containerless>
-      <div slot="side-menu">
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
-          <i class="material-icons">more_vert</i>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-          <li class="mdl-menu__item">About</li>
-          <li class="mdl-menu__item">Contact</li>
-          <li class="mdl-menu__item">Legal information</li>
-        </ul>
-      </div>
-    </ui-header>
+  <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+    <loading-indicator loading.bind="router.isNavigating & debounce: 100" containerless></loading-indicator>
 
     <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
       <ui-drawer containerless></ui-drawer>
@@ -26,7 +13,7 @@
 
     </div>
     <main class="mdl-layout__content mdl-color--grey-100">
-      <div class="mdl-grid demo-content">
+      <div show.bind="!router.isNavigating & debounce: 100" class="mdl-grid demo-content">
         <router-view containerless></router-view>
       </div>
     </main>
